@@ -1,0 +1,4 @@
+# file: C:\Users\drnaz\Ryan\Pull-request-videos\backend\config\settings.py
+# hypothesis_version: 6.151.9
+
+['/tmp/pr-videos', '0.0.0.0', '1280', '30000', '720', '8000', 'BROWSER_TIMEOUT_MS', 'HOST', 'INFO', 'LOG_LEVEL', 'OUTPUT_DIR', 'PORT', 'TTS_VOICE', 'VIDEO_HEIGHT', 'VIDEO_WIDTH', 'en-US-AriaNeural']

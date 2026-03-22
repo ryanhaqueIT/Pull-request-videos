@@ -1,0 +1,4 @@
+# file: C:\Users\drnaz\Ryan\Pull-request-videos\backend\services\assembler.py
+# hypothesis_version: 6.151.9
+
+[120, 500, '+faststart', '-an', '-b:a', '-c:a', '-c:v', '-crf', '-i', '-movflags', '-preset', '-shortest', '-y', '128k', '23', 'Assembling video', 'Assembly complete', 'FFmpeg failed', 'aac', 'cmd', 'fast', 'ffmpeg', 'libx264', 'output', 'returncode', 'size', 'stderr']

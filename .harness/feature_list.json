@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "meta": {
+    "project": "Pull Request Videos",
+    "created": "2026-03-22",
+    "total": 8,
+    "passing": 8
+  },
+  "features": [
+    {
+      "id": "F001",
+      "category": "functional",
+      "priority": 1,
+      "description": "GET /health returns healthy status",
+      "steps": [
+        "Send GET /health",
+        "Verify HTTP 200 response",
+        "Verify response body contains {\"status\": \"healthy\"}"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:03:30Z"
+    },
+    {
+      "id": "F002",
+      "category": "reliability",
+      "priority": 2,
+      "description": "API returns structured error responses with correlation ID",
+      "steps": [
+        "Send a request to a non-existent endpoint",
+        "Verify HTTP 404 response with JSON body",
+        "Verify response contains correlation_id field"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:03:31Z"
+    },
+    {
+      "id": "F003",
+      "category": "observability",
+      "priority": 3,
+      "description": "Application logs structured JSON to stdout",
+      "steps": [
+        "Start the application",
+        "Send a request to any endpoint",
+        "Verify stdout contains structured JSON log lines with timestamp, level, and message fields"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:03:32Z"
+    },
+    {
+      "id": "F004",
+      "category": "functional",
+      "priority": 4,
+      "description": "Playwright recording of target URL produces WebM video",
+      "steps": [
+        "Call the recorder service with a valid URL",
+        "Verify a WebM video file is created in the output directory",
+        "Verify the file size is greater than 0 bytes"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:04:00Z"
+    },
+    {
+      "id": "F005",
+      "category": "functional",
+      "priority": 5,
+      "description": "FFmpeg converts WebM to MP4 and produces clean output",
+      "steps": [
+        "Provide a WebM video file to the assembler service",
+        "Verify an MP4 file is produced",
+        "Verify the MP4 is a valid video file"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:04:10Z"
+    },
+    {
+      "id": "F006",
+      "category": "functional",
+      "priority": 6,
+      "description": "TTS narration generates audio from diff text",
+      "steps": [
+        "Provide a git diff string to the narrator service",
+        "Verify a narration script is generated",
+        "Verify an audio file (MP3) is produced from the narration"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:04:20Z"
+    },
+    {
+      "id": "F007",
+      "category": "functional",
+      "priority": 7,
+      "description": "CLI generates complete MP4 from URL",
+      "steps": [
+        "Run: cd backend && python __main__.py generate --url https://example.com --diff /tmp/test-diff.txt --output test.mp4",
+        "Verify test.mp4 is created and is a valid MP4 file",
+        "Verify the file contains both video and audio tracks"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:05:50Z"
+    },
+    {
+      "id": "F008",
+      "category": "functional",
+      "priority": 8,
+      "description": "GitHub Actions workflow triggers video generation on PR",
+      "steps": [
+        "Verify .github/workflows/pr-video.yml exists",
+        "Verify workflow triggers on pull_request events",
+        "Verify workflow calls the video generation pipeline"
+      ],
+      "passes": true,
+      "verified_by": "claude",
+      "verified_at": "2026-03-22T13:06:30Z"
+    }
+  ]
+}

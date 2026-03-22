@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scripts/validate.sh)",
+      "Bash(python scripts/harness_scorecard.py)",
+      "Bash(python scripts/ratchet.py*)",
+      "Bash(python scripts/check_imports.py)",
+      "Bash(python scripts/check_golden_principles.py)",
+      "Bash(python scripts/check_architecture.py)",
+      "Bash(python scripts/check_features.py*)",
+      "Bash(scripts/boot_worktree.sh*)",
+      "Bash(git *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "command": "bash .claude/hooks/pre-commit.sh"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "python .claude/hooks/enforce-locations.py"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "command": "bash .claude/hooks/post-edit.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "command": "python scripts/stop_verification.py"
+      }
+    ]
+  }
+}

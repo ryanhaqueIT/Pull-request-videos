@@ -1,0 +1,4 @@
+# file: C:\Users\drnaz\Ryan\Pull-request-videos\backend\services\recorder.py
+# hypothesis_version: 6.151.9
+
+[500, 1000, 'Recording complete', 'Recording started', 'height', 'networkidle', 'output', 'size', 'url', 'width']
