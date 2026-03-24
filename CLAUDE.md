@@ -37,15 +37,12 @@ something, fix validate.sh — not this file.
 ## Module Dependency Rules
 
 ```
-No modules defined yet — this is a greenfield project.
-
-Prescribed architecture (adapt when code lands):
-  routers/    → may import: services/, models/, auth/
-  services/   → may import: db/, models/
-  db/         → may import: models/
+backend/
+  routers/    → may import: services/, models/, config/
+  services/   → may import: models/, config/
   models/     → leaf layer (imports nothing from project)
-  auth/       → may import: db/, models/
-  config/     → leaf layer
+  config/     → leaf layer (only module that reads os.environ)
+sandbox/      → standalone (runs inside Docker container)
 ```
 
 Enforced by `scripts/check_imports.py` in CI. Violations fail the build.

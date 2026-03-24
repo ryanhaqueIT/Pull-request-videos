@@ -22,6 +22,18 @@ class Settings:
     )
     video_width: int = field(default_factory=lambda: int(os.environ.get("VIDEO_WIDTH", "1280")))
     video_height: int = field(default_factory=lambda: int(os.environ.get("VIDEO_HEIGHT", "720")))
+    # Agent settings
+    anthropic_api_key: str = field(default_factory=lambda: os.environ.get("ANTHROPIC_API_KEY", ""))
+    control_plane_port: int = field(
+        default_factory=lambda: int(os.environ.get("CONTROL_PLANE_PORT", "9100"))
+    )
+    sandbox_image: str = field(
+        default_factory=lambda: os.environ.get("SANDBOX_IMAGE", "pr-video-sandbox:latest")
+    )
+    sandbox_memory: str = field(default_factory=lambda: os.environ.get("SANDBOX_MEMORY", "2g"))
+    sandbox_timeout: int = field(
+        default_factory=lambda: int(os.environ.get("SANDBOX_TIMEOUT", "600"))
+    )
 
 
 def load_settings() -> Settings:
