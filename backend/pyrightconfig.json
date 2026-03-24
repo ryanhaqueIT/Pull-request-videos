@@ -1,0 +1,15 @@
+{
+  "include": ["config", "models", "routers", "services"],
+  "exclude": ["tests", ".venv", "**/__pycache__"],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportOptionalMemberAccess": false,
+  "reportAttributeAccessIssue": false,
+  "reportInvalidTypeForm": false,
+  "reportReturnType": false,
+  "reportUnusedImport": true,
+  "reportUnusedVariable": true,
+  "reportDuplicateImport": true
+}

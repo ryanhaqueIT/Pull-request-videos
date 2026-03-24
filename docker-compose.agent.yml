@@ -1,0 +1,44 @@
+# docker-compose.agent.yml
+# Runs the control plane + optionally spawns agent sandboxes.
+#
+# Usage:
+#   docker compose -f docker-compose.agent.yml up control-plane
+#   docker compose -f docker-compose.agent.yml --profile agent run agent
+
+services:
+  control-plane:
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile
+    ports:
+      - "9100:9100"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=9100
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - LOG_LEVEL=INFO
+    volumes:
+      - artifacts:/tmp/pr-videos/artifacts
+    working_dir: /app/backend
+    command: uvicorn main:app --host 0.0.0.0 --port 9100
+
+  # Agent sandbox — launched explicitly, not always running
+  agent:
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile
+    depends_on:
+      - control-plane
+    environment:
+      - CONTROL_PLANE_URL=http://control-plane:9100
+      - SESSION_TOKEN=${SESSION_TOKEN}
+      - SESSION_ID=${SESSION_ID}
+      - AGENT_DIFF=${AGENT_DIFF}
+      - AGENT_APP_URL=${AGENT_APP_URL:-http://host.docker.internal:3000}
+    volumes:
+      - artifacts:/artifacts
+    profiles:
+      - agent
+
+volumes:
+  artifacts:

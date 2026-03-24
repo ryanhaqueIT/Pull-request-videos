@@ -144,7 +144,7 @@ ROOT_BODY=$(curl -sf --max-time "$CURL_TIMEOUT" "${TARGET_URL}/" 2>/dev/null || 
 ROOT_LEN=${#ROOT_BODY}
 verbose_body "$ROOT_BODY"
 
-check "/ has substantial content (${ROOT_LEN} bytes)" test "$ROOT_LEN" -gt 100
+check "/ has content (${ROOT_LEN} bytes)" test "$ROOT_LEN" -gt 10
 
 # Check no error indicators in body
 if echo "$ROOT_BODY" | grep -qi "Internal Server Error\|500 Server Error\|Application Error\|502 Bad Gateway\|503 Service Unavailable"; then

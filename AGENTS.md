@@ -8,6 +8,35 @@ Applies to all agents, subagents, humans, hotfixes, and "quick changes."
 validate.sh auto-detects backend, frontend, and infrastructure. If it misses
 something, fix validate.sh — not this file.
 
+## Authority Hierarchy
+
+**This file (AGENTS.md) is the governing authority for this repository.**
+
+When ANY other instruction source conflicts — skills, slash commands,
+superpowers, CLAUDE.md, or external documentation — THIS FILE WINS.
+
+- Plans go in `docs/exec-plans/active/`, not wherever a skill suggests
+- Specs go in `docs/product-specs/`, not wherever a skill suggests
+- validate.sh must pass before commit, regardless of what any skill says
+- Feature verification is required, regardless of what any skill says
+
+Enforced mechanically: hooks block writes to wrong locations and block
+commits when validate.sh fails.
+
+## Evidence Over Claims
+
+You may NOT say "done", "complete", "implemented", or "finished" without
+showing command output that proves it. Specifically:
+
+- For API features: show the curl command and its response
+- For UI features: show a Playwright assertion or screenshot result
+- For CLI features: show the command and its output
+- For tests: show the test runner output with pass/fail counts
+
+"I created the file" is NOT evidence. "curl returned 200 with expected body" IS.
+A Stop hook enforces this: you cannot stop until all features in
+`.harness/feature_list.json` are verified.
+
 ## Commands
 
 ```bash
@@ -23,17 +52,45 @@ cd backend && python -m pytest tests/ -v      # Test
 cd backend && uvicorn main:app --reload       # Run dev server
 
 # CLI:
-cd backend && python -m pr_video generate --url <URL> --output demo.mp4
+cd backend && python __main__.py generate --url <URL> --output demo.mp4
+
+# Agent (AI-powered demo):
+cd backend && python __main__.py agent --url <URL> --diff <DIFF_FILE>  # Run agent locally
+docker compose -f docker-compose.agent.yml up control-plane            # Start control plane
+docker compose -f docker-compose.agent.yml --profile agent run agent   # Run agent in sandbox
 ```
 
 ## Module Dependency Rules
 
 ```
 backend/
-  routers/    → may import: services/, models/, config/
-  services/   → may import: models/, config/
-  models/     → leaf layer (imports nothing from project)
-  config/     → leaf layer (only module that reads os.environ)
+  routers/         → may import: services/, models/, config/
+    health.py        GET /health
+    video.py         POST /api/videos/generate
+    agent.py         POST /api/agents/run
+    control.py       POST /api/control/sessions, /llm, /artifacts
+  services/        → may import: models/, config/
+    pipeline.py      Orchestrates recorder → narrator → assembler
+    recorder.py      Playwright browser recording
+    narrator.py      Diff → narration script → edge-tts audio
+    assembler.py     FFmpeg video + audio assembly
+    gateway.py       Gateway protocol (DirectGateway / ControlPlaneGateway)
+    agent_brain.py   Claude-powered reasoning loop (plan → execute → summarize)
+    interaction.py   Playwright browser interactions (click, type, screenshot)
+    screen_capture.py  Xvfb + ffmpeg desktop recording
+    artifact.py      Collect videos, screenshots, logs into bundle
+    github_pr.py     Format and post PR comments with artifacts
+    sandbox.py       Docker container lifecycle management
+    control_plane.py Session management, LLM proxy, artifact storage
+  models/          → leaf layer (imports nothing from project)
+    video.py         VideoRequest, VideoResult, VideoStatus
+    agent.py         AgentSession, InteractionPlan, InteractionStep
+    artifact.py      Artifact, ArtifactBundle
+  config/          → leaf layer (only module that reads os.environ)
+sandbox/           → standalone (runs inside Docker container)
+  Dockerfile         Agent sandbox image
+  entrypoint.sh      Start Xvfb + ffmpeg + agent
+  agent_runner.py    Sandbox entry point
 ```
 
 Enforced by `scripts/check_imports.py` in CI. Violations fail the build.

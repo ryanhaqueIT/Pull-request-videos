@@ -11,6 +11,8 @@ dependencies = [
     "edge-tts>=7.0.0",
     "httpx>=0.28.0",
     "imageio-ffmpeg>=0.5.1",
+    "anthropic>=0.40.0",
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]

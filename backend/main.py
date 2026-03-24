@@ -11,7 +11,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from config.settings import load_settings
-from routers import health, video
+from routers import agent, control, health, video
+from services.control_plane import ControlPlaneService
 
 settings = load_settings()
 
@@ -38,6 +39,7 @@ def setup_logging() -> None:
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application startup and shutdown."""
     setup_logging()
+    app.state.control_plane = ControlPlaneService(settings)
     logger = structlog.get_logger()
     logger.info("application_started", host=settings.host, port=settings.port)
     yield
@@ -51,8 +53,24 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Initialize control plane eagerly so it's available in tests (lifespan may not run)
+app.state.control_plane = ControlPlaneService(settings)
+
 app.include_router(health.router)
 app.include_router(video.router)
+app.include_router(agent.router)
+app.include_router(control.router)
+
+
+@app.get("/")
+async def root() -> dict[str, str]:
+    """Root endpoint — redirect to docs."""
+    return {
+        "service": "PR Video Agent",
+        "version": "0.2.0",
+        "docs": "/docs",
+        "health": "/health",
+    }
 
 
 @app.middleware("http")

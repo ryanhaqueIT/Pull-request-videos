@@ -15,4 +15,4 @@ async def health(request: Request) -> dict[str, Any]:
     """Return service health status."""
     correlation_id = getattr(request.state, "correlation_id", "unknown")
     logger.info("Health check requested", extra={"correlation_id": correlation_id})
-    return {"status": "healthy"}
+    return {"status": "healthy", "version": "0.1.0"}
